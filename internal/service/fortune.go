@@ -1,9 +1,9 @@
 package service
 
 import (
-	"bufio"
 	"errors"
 	"fmt"
+	"os"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -95,19 +95,20 @@ func (s *FortuneService) GetFortune(opts FortuneOptions) (*FortuneResponse, erro
 }
 
 func (s *FortuneService) ListFiles() ([]string, error) {
-	cmd := exec.Command(s.fortunePath, "-f")
-	output, err := cmd.Output()
+	// On Debian systems, fortune files are stored in this directory.
+	const fortuneDir = "/usr/share/games/fortunes/"
+
+	entries, err := os.ReadDir(fortuneDir)
 	if err != nil {
-		s.logger.Error("Fortune list files command failed", zap.Error(err))
-		return nil, fmt.Errorf("failed to list fortune files: %w", err)
+		s.logger.Error("Failed to read fortune directory", zap.Error(err), zap.String("directory", fortuneDir))
+		return nil, fmt.Errorf("could not read fortune directory: %w", err)
 	}
 
 	var files []string
-	scanner := bufio.NewScanner(strings.NewReader(string(output)))
-	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-		if line != "" {
-			files = append(files, line)
+	for _, entry := range entries {
+		// We only want the actual data files, not directories or the index (.dat) files.
+		if !entry.IsDir() && !strings.HasSuffix(entry.Name(), ".dat") {
+			files = append(files, entry.Name())
 		}
 	}
 

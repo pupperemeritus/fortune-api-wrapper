@@ -58,7 +58,7 @@ func (h *Handler) ListFiles(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := map[string]interface{}{
+	response := map[string]any{
 		"files": files,
 		"count": len(files),
 	}
@@ -116,7 +116,7 @@ func (h *Handler) parseFortuneOptions(r *http.Request) service.FortuneOptions {
 	return opts
 }
 
-func (h *Handler) writeJSONResponse(w http.ResponseWriter, statusCode int, data interface{}) {
+func (h *Handler) writeJSONResponse(w http.ResponseWriter, statusCode int, data any) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
 
