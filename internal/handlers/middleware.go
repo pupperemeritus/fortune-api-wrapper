@@ -77,7 +77,7 @@ func getClient(ip string) *rate.Limiter {
 
 	// If the client does not exist, create a new one.
 	// Allow 2 requests per second with a burst of 4.
-	limiter := rate.NewLimiter(2, 4)
+	limiter := rate.NewLimiter(5, 4)
 	clients[ip] = &client{limiter, time.Now()}
 
 	return limiter
