@@ -16,7 +16,7 @@ type Config struct {
 func Load() *Config {
 	return &Config{
 		ServerAddress: getEnv("SERVER_ADDRESS", ":8080"),
-		FortunePath:   getEnv("FORTUNE_PATH", "fortune"),
+		FortunePath:   getEnv("FORTUNE_PATH", "/usr/games/fortune"),
 		ReadTimeout:   getDurationEnv("READ_TIMEOUT", 15*time.Second),
 		WriteTimeout:  getDurationEnv("WRITE_TIMEOUT", 15*time.Second),
 		IdleTimeout:   getDurationEnv("IDLE_TIMEOUT", 60*time.Second),

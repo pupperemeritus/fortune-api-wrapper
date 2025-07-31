@@ -26,7 +26,7 @@ FROM debian:bookworm-slim
 # - 'wget' is for the HEALTHCHECK.
 # - 'ca-certificates' is for HTTPS support.
 # We clean up the apt cache to keep the image small.
-RUN apt-get update && apt-get install -y fortune-mod wget ca-certificates \
+RUN apt-get update && apt-get install -y fortune-mod fortunes wget ca-certificates \
   && rm -rf /var/lib/apt/lists/*
 
 # --- Security Best Practice: Run as non-root user ---
