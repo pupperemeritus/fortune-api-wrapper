@@ -11,6 +11,18 @@ import (
 	"go.uber.org/zap"
 )
 
+// FortuneServiceInterface defines the contract for our fortune service.
+// Handlers will depend on this interface, not the concrete implementation.
+type FortuneServiceInterface interface {
+	GetFortune(opts FortuneOptions) (*FortuneResponse, error)
+	ListFiles() ([]string, error)
+	SearchFortunes(pattern string, opts FortuneOptions) (*SearchResponse, error)
+}
+
+// Ensure FortuneService implements the interface.
+// This is a compile-time check.
+var _ FortuneServiceInterface = (*FortuneService)(nil)
+
 type FortuneService struct {
 	fortunePath string
 	logger      *zap.Logger
@@ -169,11 +181,12 @@ func (s *FortuneService) buildArgs(opts FortuneOptions) []string {
 	return args
 }
 
+// This function is now corrected to use the proper separator.
 func (s *FortuneService) parseSearchResults(output string) []FortuneResponse {
 	var matches []FortuneResponse
 
-	// Split by double newlines (fortune separator)
-	fortunes := strings.Split(output, "\n\n")
+	// The `fortune -m` command separates matches with a '%' on its own line.
+	fortunes := strings.Split(output, "\n%\n")
 
 	for _, fortune := range fortunes {
 		fortune = strings.TrimSpace(fortune)

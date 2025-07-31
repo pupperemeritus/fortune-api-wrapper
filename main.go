@@ -43,6 +43,7 @@ func main() {
 	// Add middleware
 	router.Use(handlers.LoggingMiddleware(logger))
 	router.Use(handlers.CORSMiddleware)
+	router.Use(handlers.PerClientRateLimit)
 
 	// Setup server
 	srv := &http.Server{

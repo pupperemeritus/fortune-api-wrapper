@@ -11,7 +11,8 @@ import (
 )
 
 type Handler struct {
-	fortuneService *service.FortuneService
+	// Depend on the interface, not the concrete type.
+	fortuneService service.FortuneServiceInterface
 	logger         *zap.Logger
 }
 
@@ -20,7 +21,8 @@ type ErrorResponse struct {
 	Message string `json:"message,omitempty"`
 }
 
-func NewHandler(fortuneService *service.FortuneService, logger *zap.Logger) *Handler {
+// NewHandler now accepts the interface.
+func NewHandler(fortuneService service.FortuneServiceInterface, logger *zap.Logger) *Handler {
 	return &Handler{
 		fortuneService: fortuneService,
 		logger:         logger,
